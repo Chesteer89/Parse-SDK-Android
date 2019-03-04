@@ -11,8 +11,7 @@ package com.parse;
 import android.os.Bundle;
 import android.os.Parcel;
 import android.os.Parcelable;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
+import android.util.Log;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -36,6 +35,8 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.locks.Lock;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import bolts.Capture;
 import bolts.Continuation;
 import bolts.Task;
@@ -2359,7 +2360,9 @@ public class ParseObject implements Parcelable {
      * @return A {@link bolts.Task} that is resolved when the save completes.
      */
     public final Task<Void> saveEventually() {
+        Log.e(TAG, "Save eventually");
         if (!isDirty()) {
+            Log.e(TAG, "!isDirty");
             Parse.getEventuallyQueue().fakeObjectUpdate();
             return Task.forResult(null);
         }
@@ -2424,9 +2427,11 @@ public class ParseObject implements Parcelable {
 
         Task<Void> handleSaveResultTask;
         if (Parse.isLocalDatastoreEnabled()) {
+            Log.e(TAG, "Local database store is enabled");
             // ParsePinningEventuallyQueue calls handleSaveEventuallyResultAsync directly.
             handleSaveResultTask = runEventuallyTask.makeVoid();
         } else {
+            Log.e(TAG, "Local database store is disabled");
             handleSaveResultTask = runEventuallyTask.onSuccessTask(new Continuation<JSONObject, Task<Void>>() {
                 @Override
                 public Task<Void> then(Task<JSONObject> task) {
