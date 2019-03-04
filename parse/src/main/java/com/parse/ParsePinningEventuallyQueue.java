@@ -77,7 +77,8 @@ class ParsePinningEventuallyQueue extends ParseEventuallyQueue {
             boolean connectionLost =
                     intent.getBooleanExtra(ConnectivityManager.EXTRA_NO_CONNECTIVITY, false);
             if (connectionLost) {
-                setConnected(false);
+                //setConnected(false);
+                setConnected(true);
             } else {
                 setConnected(ConnectivityNotifier.isConnected(context));
             }

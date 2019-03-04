@@ -14,7 +14,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ReceiverCallNotAllowedException;
 import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -34,14 +33,15 @@ class ConnectivityNotifier extends BroadcastReceiver {
     }
 
     public static boolean isConnected(Context context) {
-        ConnectivityManager connectivityManager =
+        return true;
+        /*ConnectivityManager connectivityManager =
                 (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         if (connectivityManager == null) {
             return false;
         }
 
         NetworkInfo network = connectivityManager.getActiveNetworkInfo();
-        return network != null && network.isConnected();
+        return network != null && network.isConnected();*/
     }
 
     public void addListener(ConnectivityListener delegate) {
