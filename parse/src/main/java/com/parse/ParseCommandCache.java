@@ -408,13 +408,19 @@ class ParseCommandCache extends ParseEventuallyQueue {
      * Manually sets the network connection status.
      */
     public void setConnected(boolean connected) {
+//        synchronized (lock) {
+//            if (isConnected() != connected) {
+//                if (connected) {
+//                    lock.notifyAll();
+//                }
+//            }
+//            super.setConnected(connected);
+//        }
         synchronized (lock) {
-            if (isConnected() != connected) {
-                if (connected) {
+            if (isConnected() != true) {
                     lock.notifyAll();
-                }
             }
-            super.setConnected(connected);
+            super.setConnected(true);
         }
     }
 
