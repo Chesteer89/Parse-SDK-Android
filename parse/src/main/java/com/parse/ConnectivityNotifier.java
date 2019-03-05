@@ -14,6 +14,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ReceiverCallNotAllowedException;
 import android.net.ConnectivityManager;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -81,6 +82,7 @@ class ConnectivityNotifier extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
+        Log.e(TAG, "android.net.conn.CONNECTIVITY_CHANGE action received");
         List<ConnectivityListener> listenersCopy;
         synchronized (lock) {
             listenersCopy = new ArrayList<>(listeners);
