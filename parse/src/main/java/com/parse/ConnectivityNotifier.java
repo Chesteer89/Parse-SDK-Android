@@ -27,14 +27,21 @@ class ConnectivityNotifier extends BroadcastReceiver {
     private final Object lock = new Object();
     private Set<ConnectivityListener> listeners = new HashSet<>();
     private boolean hasRegisteredReceiver = false;
+    private static boolean hasNetworkAccess = true;
 
     public static ConnectivityNotifier getNotifier(Context context) {
         singleton.tryToRegisterForNetworkStatusNotifications(context);
         return singleton;
     }
 
+    public static void setNetworkAccess(Context context, Boolean hasAccess){
+        hasNetworkAccess = hasAccess;
+        Intent intent = new Intent(ConnectivityManager.CONNECTIVITY_ACTION);
+        context.sendBroadcast(intent);
+    }
+
     public static boolean isConnected(Context context) {
-        return true;
+        return hasNetworkAccess;
         /*ConnectivityManager connectivityManager =
                 (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         if (connectivityManager == null) {

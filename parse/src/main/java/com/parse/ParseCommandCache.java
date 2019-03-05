@@ -409,16 +409,12 @@ class ParseCommandCache extends ParseEventuallyQueue {
      */
     public void setConnected(boolean connected) {
         synchronized (lock) {
-            /*if (isConnected() != connected) {
+            if (isConnected() != connected) {
                 if (connected) {
                     lock.notifyAll();
                 }
             }
-            super.setConnected(connected);*/
-            if (!isConnected()){
-                lock.notifyAll();
-                super.setConnected(true);
-            }
+            super.setConnected(connected);
         }
     }
 

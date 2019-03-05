@@ -118,7 +118,7 @@ class ParsePinningEventuallyQueue extends ParseEventuallyQueue {
     @Override
     public void setConnected(boolean connected) {
         synchronized (connectionLock) {
-            /*if (isConnected() != connected) {
+            if (isConnected() != connected) {
                 super.setConnected(connected);
                 if (connected) {
                     connectionTaskCompletionSource.trySetResult(null);
@@ -127,12 +127,6 @@ class ParsePinningEventuallyQueue extends ParseEventuallyQueue {
                 } else {
                     connectionTaskCompletionSource = new TaskCompletionSource<>();
                 }
-            }*/
-            if (!isConnected()){
-                super.setConnected(true);
-                    connectionTaskCompletionSource.trySetResult(null);
-                    connectionTaskCompletionSource = new TaskCompletionSource<>();
-                    connectionTaskCompletionSource.trySetResult(null);
             }
         }
     }
