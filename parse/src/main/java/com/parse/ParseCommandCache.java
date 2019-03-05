@@ -85,8 +85,8 @@ class ParseCommandCache extends ParseEventuallyQueue {
         }
     };
     private File cachePath; // Where the cache is stored on disk.
-    private int timeoutMaxRetries = 5; // Don't retry more than 5 times before assuming disconnection.
-    private double timeoutRetryWaitSeconds = 600.0f; // Wait 10 minutes before retrying after network
+    private int timeoutMaxRetries = Integer.MAX_VALUE;//5; // Don't retry more than 5 times before assuming disconnection.
+    private double timeoutRetryWaitSeconds = 60.0f; // Wait 1 minute before retrying after network
     // timeout.
     private int maxCacheSizeBytes = 10 * 1024 * 1024; // Don't consume more than N bytes of storage.
     // processed by the run loop?
