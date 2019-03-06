@@ -191,7 +191,7 @@ public class Parse {
         }
     }
 
-    static void destroy() {
+    public static void destroy() {
         ParseObject.unregisterParseSubclasses();
 
         ParseEventuallyQueue queue;
