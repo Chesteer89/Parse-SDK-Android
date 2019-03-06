@@ -21,7 +21,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-class ConnectivityNotifier extends BroadcastReceiver {
+public class ConnectivityNotifier extends BroadcastReceiver {
     private static final String TAG = "com.parse.ConnectivityNotifier";
     private static final ConnectivityNotifier singleton = new ConnectivityNotifier();
     private final Object lock = new Object();
@@ -38,6 +38,10 @@ class ConnectivityNotifier extends BroadcastReceiver {
         hasNetworkAccess = hasAccess;
         Intent intent = new Intent(ConnectivityManager.CONNECTIVITY_ACTION);
         context.sendBroadcast(intent);
+    }
+
+    public static boolean getNetworkAccess(){
+        return hasNetworkAccess;
     }
 
     public static boolean isConnected(Context context) {
