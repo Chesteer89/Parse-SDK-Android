@@ -36,8 +36,10 @@ public class ConnectivityNotifier extends BroadcastReceiver {
 
     public static void setNetworkAccess(Context context, Boolean hasAccess){
         hasNetworkAccess = hasAccess;
-        Intent intent = new Intent(ConnectivityManager.CONNECTIVITY_ACTION);
-        context.sendBroadcast(intent);
+
+        // not allowed to send broadcast android.net.conn.CONNECTIVITY_CHANGE
+        // Intent intent = new Intent(ConnectivityManager.CONNECTIVITY_ACTION);
+        // context.sendBroadcast(intent);
     }
 
     public static boolean getNetworkAccess(){
