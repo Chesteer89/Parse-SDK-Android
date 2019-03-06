@@ -2359,9 +2359,7 @@ public class ParseObject implements Parcelable {
      * @return A {@link bolts.Task} that is resolved when the save completes.
      */
     public final Task<Void> saveEventually() {
-        Log.e(TAG, "Save eventually");
         if (!isDirty()) {
-            Log.e(TAG, "!isDirty");
             Parse.getEventuallyQueue().fakeObjectUpdate();
             return Task.forResult(null);
         }
@@ -2426,11 +2424,9 @@ public class ParseObject implements Parcelable {
 
         Task<Void> handleSaveResultTask;
         if (Parse.isLocalDatastoreEnabled()) {
-            Log.e(TAG, "Local database store is enabled");
             // ParsePinningEventuallyQueue calls handleSaveEventuallyResultAsync directly.
             handleSaveResultTask = runEventuallyTask.makeVoid();
         } else {
-            Log.e(TAG, "Local database store is disabled");
             handleSaveResultTask = runEventuallyTask.onSuccessTask(new Continuation<JSONObject, Task<Void>>() {
                 @Override
                 public Task<Void> then(Task<JSONObject> task) {
