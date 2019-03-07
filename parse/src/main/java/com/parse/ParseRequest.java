@@ -49,7 +49,7 @@ abstract class ParseRequest<Response> {
     private static final int CPU_COUNT = Runtime.getRuntime().availableProcessors();
     private static final int CORE_POOL_SIZE = CPU_COUNT * 2 + 1;
     private static final int MAX_POOL_SIZE = CPU_COUNT * 2 * 2 + 1;
-    private static final long KEEP_ALIVE_TIME = 10L;
+    private static final long KEEP_ALIVE_TIME = 1L;
     private static final int MAX_QUEUE_SIZE = 128;
     protected static final ExecutorService NETWORK_EXECUTOR = newThreadPoolExecutor(
             CORE_POOL_SIZE, MAX_POOL_SIZE, KEEP_ALIVE_TIME, TimeUnit.SECONDS,
@@ -236,7 +236,7 @@ abstract class ParseRequest<Response> {
                                         client,
                                         request,
                                         attemptsMade + 1,
-                                        delay,// * 2,
+                                        Math.max(delay * 2, 30000),
                                         downloadProgressCallback,
                                         cancellationToken).continueWithTask(new Continuation<Response, Task<Void>>() {
                                     @Override
