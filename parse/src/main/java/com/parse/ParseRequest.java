@@ -224,7 +224,7 @@ abstract class ParseRequest<Response> {
                         return task;
                     }
 
-                    if (attemptsMade < maxRetries()) {
+                    if (attemptsMade < maxRetries() || maxRetries() < 0) {
                         PLog.i("com.parse.ParseRequest", "Request failed. Waiting " + delay
                                 + " milliseconds before attempt #" + (attemptsMade + 1));
 
