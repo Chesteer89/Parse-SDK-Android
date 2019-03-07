@@ -508,7 +508,8 @@ public class Parse {
         final String server;
         final boolean localDataStoreEnabled;
         final OkHttpClient.Builder clientBuilder;
-        final int maxRetries;
+        final Integer maxRetries;
+        final Long maxDelay;
         private Configuration(Builder builder) {
             this.context = builder.context;
             this.applicationId = builder.applicationId;
@@ -517,6 +518,7 @@ public class Parse {
             this.localDataStoreEnabled = builder.localDataStoreEnabled;
             this.clientBuilder = builder.clientBuilder;
             this.maxRetries = builder.maxRetries;
+            this.maxDelay = builder.maxDelay;
         }
 
         /**
@@ -529,7 +531,8 @@ public class Parse {
             private String server;
             private boolean localDataStoreEnabled;
             private OkHttpClient.Builder clientBuilder;
-            private int maxRetries = DEFAULT_MAX_RETRIES;
+            private Integer maxRetries = DEFAULT_MAX_RETRIES;
+            private Long maxDelay = null;
 
             /**
              * Initialize a bulider with a given context.
@@ -616,11 +619,24 @@ public class Parse {
              * Set the max number of times to retry Parse operations before deeming them a failure
              * <p>
              *
-             * @param maxRetries The maximum number of times to retry. <=0 to never retry commands
+             * @param maxRetries The maximum number of times to retry. <=0 to never retry commands,
+             *                   NULL to unlimited retransmissions
              * @return The same builder, for easy chaining.
              */
-            public Builder maxRetries(int maxRetries) {
+            public Builder maxRetries(Integer maxRetries) {
                 this.maxRetries = maxRetries;
+                return this;
+            }
+
+            /**
+             * Set the max delay of retransmission
+             * <p>
+             *
+             * @param maxDelay The maximum time to retry. NULL to skip max delay
+             * @return The same builder, for easy chaining.
+             */
+            public Builder maxDelay(Long maxDelay) {
+                this.maxDelay = maxDelay;
                 return this;
             }
 

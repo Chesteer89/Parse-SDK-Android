@@ -84,12 +84,21 @@ abstract class ParseRequest<Response> {
         defaultInitialRetryDelay = delay;
     }
 
-    private static int maxRetries() {
+    private static Integer maxRetries() {
         //typically happens just within tests
         if (ParsePlugins.get() == null) {
             return DEFAULT_MAX_RETRIES;
         } else {
             return ParsePlugins.get().configuration().maxRetries;
+        }
+    }
+
+    private static Long maxDelay() {
+        //typically happens just within tests
+        if (ParsePlugins.get() == null) {
+            return null;
+        } else {
+            return ParsePlugins.get().configuration().maxDelay;
         }
     }
 
@@ -224,7 +233,7 @@ abstract class ParseRequest<Response> {
                         return task;
                     }
 
-                    if (attemptsMade < maxRetries() || maxRetries() < 0) {
+                    if (maxRetries() == null || attemptsMade < maxRetries()) {
                         PLog.i("com.parse.ParseRequest", "Request failed. Waiting " + delay
                                 + " milliseconds before attempt #" + (attemptsMade + 1));
 
@@ -236,7 +245,7 @@ abstract class ParseRequest<Response> {
                                         client,
                                         request,
                                         attemptsMade + 1,
-                                        Math.max(delay * 2, 30000),
+                                        getDelay(delay * 2, maxDelay()),//Math.min(delay * 2, 30 * 1000),
                                         downloadProgressCallback,
                                         cancellationToken).continueWithTask(new Continuation<Response, Task<Void>>() {
                                     @Override
@@ -259,6 +268,15 @@ abstract class ParseRequest<Response> {
                 return task;
             }
         });
+    }
+
+    /**
+     * Return a time delay value for retransmission
+     */
+    private long getDelay(long delay, Long maxDelay) {
+        if(maxDelay == null) return delay;
+
+        return Math.min(delay, maxDelay);
     }
 
     /**
