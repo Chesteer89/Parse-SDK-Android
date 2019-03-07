@@ -14,6 +14,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ReceiverCallNotAllowedException;
 import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.util.Log;
 
 import java.util.ArrayList;
@@ -24,10 +25,12 @@ import java.util.Set;
 public class ConnectivityNotifier extends BroadcastReceiver {
     private static final String TAG = "com.parse.ConnectivityNotifier";
     private static final ConnectivityNotifier singleton = new ConnectivityNotifier();
+    public static final String CONNECTIVITY_ACTION = "com.parse.CONNECTIVITY_CHANGE";
     private final Object lock = new Object();
     private Set<ConnectivityListener> listeners = new HashSet<>();
     private boolean hasRegisteredReceiver = false;
     private static boolean hasNetworkAccess = true;
+    private static boolean manualNetworkState = false;
 
     public static ConnectivityNotifier getNotifier(Context context) {
         singleton.tryToRegisterForNetworkStatusNotifications(context);
@@ -37,25 +40,30 @@ public class ConnectivityNotifier extends BroadcastReceiver {
     public static void setNetworkAccess(Context context, Boolean hasAccess){
         hasNetworkAccess = hasAccess;
 
-        // not allowed to send broadcast android.net.conn.CONNECTIVITY_CHANGE
-        // Intent intent = new Intent(ConnectivityManager.CONNECTIVITY_ACTION);
-        // context.sendBroadcast(intent);
+        // not allowed to send broadcast android.net.conn.CONNECTIVITY_CHANGE, send custom broadcast
+        Intent intent = new Intent(CONNECTIVITY_ACTION);
+        context.sendBroadcast(intent);
     }
 
     public static boolean getNetworkAccess(){
         return hasNetworkAccess;
     }
 
+    public static void setManualNetworkState(boolean manualState){
+        manualNetworkState = manualState;
+    }
+
     public static boolean isConnected(Context context) {
-        return hasNetworkAccess;
-        /*ConnectivityManager connectivityManager =
+        if(manualNetworkState)
+            return hasNetworkAccess;
+        ConnectivityManager connectivityManager =
                 (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         if (connectivityManager == null) {
             return false;
         }
 
         NetworkInfo network = connectivityManager.getActiveNetworkInfo();
-        return network != null && network.isConnected();*/
+        return network != null && network.isConnected();
     }
 
     public void addListener(ConnectivityListener delegate) {
@@ -82,6 +90,7 @@ public class ConnectivityNotifier extends BroadcastReceiver {
                 }
                 context = context.getApplicationContext();
                 context.registerReceiver(this, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
+                context.registerReceiver(this, new IntentFilter(CONNECTIVITY_ACTION));
                 hasRegisteredReceiver = true;
                 return true;
             } catch (ReceiverCallNotAllowedException e) {
